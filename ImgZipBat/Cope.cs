@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -53,65 +54,237 @@ namespace ImgZipBat
 
                 string targetFile = "";
                 string sourceFile = s;
-                if (way == 1)
+
+                try
                 {
-                    // 覆盖原文件
-                    targetFile = sourceFile +"_.jpg" ;
-                }
-                else if (way == 2)
+                    // 获取源文件大小
+                    FileInfo sourceFileInfo = new FileInfo(sourceFile);
+                    long sourceFileInfoSize = sourceFileInfo.Length;
+
+                    targetFile = sourceFileInfo.DirectoryName + "\\" + "_target_._temp";
+
+                    if (!File.Exists(sourceFile))
+                    {
+                        DisposeProgressClick(index, total, "源文件不存在", "错误");
+                        continue;
+                    }
+
+                    if (File.Exists(targetFile))
+                    {
+                        DisposeProgressClick(index, total, "缓存已存在", "警告");
+                        File.Delete(targetFile);
+                    }
+
+                    ImgCompress(sourceFile, targetFile, quality);
+
+                    if (!File.Exists(targetFile))
+                    {
+                        DisposeProgressClick(index, total, "压缩图片失败", "错误");
+                        continue;
+                    }
+
+                    // 获取压缩后文件大小
+                    FileInfo targetFileInfo = new FileInfo(targetFile);
+                    long targetFileInfoSize = targetFileInfo.Length;
+
+
+
+                    if (way == 1)
+                    {
+                        // 覆盖原文件
+                        string sourceName = sourceFileInfo.Name;
+                        if (sourceFileInfo.Exists)
+                        {
+                            File.Delete(sourceFile);
+                        }
+
+                        if (targetFileInfo.Exists)
+                        {
+                            FileSystem.RenameFile(targetFile, sourceName);
+                        }
+                    }
+                    else if (way == 2)
+                    {
+                        // 重命名源文件
+                        string sourceName = sourceFileInfo.Name;
+                        if (sourceFileInfo.Exists)
+                        {
+                            // 文件名 不包含后缀名
+                            string name = sourceFileInfo.Name.Substring(0, sourceFileInfo.Name.Length - sourceFileInfo.Extension.Length);
+                            // 插入到表达式，得到新文件名
+                            name = arg.Replace("*", name);
+                            if (isJpg)
+                            {
+                                name += ".jpg";
+                            }
+                            else
+                            {
+                                name += sourceFileInfo.Extension;
+                            }
+
+                            //sourceFile 是文件完整路径，新的名称要包含文件后缀名
+                            FileSystem.RenameFile(sourceFile, name);
+                        }
+
+                        if (targetFileInfo.Exists)
+                        {
+                            FileSystem.RenameFile(targetFile, sourceName);
+                        }
+                    }
+                    else if (way == 3)
+                    {
+                        // 重命名压缩后文件
+
+                        // 文件名 不包含后缀名
+                        string name = sourceFileInfo.Name.Substring(0, sourceFileInfo.Name.Length - sourceFileInfo.Extension.Length);
+                        // 插入到表达式，得到新文件名
+                        name = arg.Replace("*", name);
+                        if (isJpg)
+                        {
+                            name += ".jpg";
+                        }
+                        else
+                        {
+                            name += sourceFileInfo.Extension;
+                        }
+
+                        if (targetFileInfo.Exists)
+                        {
+                            FileSystem.RenameFile(targetFile, name);
+                        }
+                    }
+                    else if (way == 4)
+                    {
+                        // 源文件转移到指定位置
+                        if (sourceFileInfo.Exists)
+                        {
+                            // 文件名 不包含后缀名
+                            string name = sourceFileInfo.Name.Substring(0, sourceFileInfo.Name.Length - sourceFileInfo.Extension.Length);
+                            if (isJpg)
+                            {
+                                name += ".jpg";
+                            }
+                            else
+                            {
+                                name += sourceFileInfo.Extension;
+                            }
+                            string destFile = arg + "\\" +name;
+                            if (MoveFolder(sourceFile, destFile))
+                            {
+                                // 覆盖原文件
+                                string sourceName = sourceFileInfo.Name;
+                                if (sourceFileInfo.Exists)
+                                {
+                                    File.Delete(sourceFile);
+                                }
+
+                                if (targetFileInfo.Exists)
+                                {
+                                    FileSystem.RenameFile(targetFile, sourceName);
+                                }
+                            }
+                            else
+                            {
+                                DisposeProgressClick(index, total, "源文件移动失败", "错误");
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            DisposeProgressClick(index, total, "源文件不存在", "错误");
+                            continue;
+                        }
+                    }
+                    else if (way == 5)
+                    {
+                        // 压缩后的文件输出到指定位置
+                        if (targetFileInfo.Exists)
+                        {
+                            // 文件名 不包含后缀名
+                            string name = sourceFileInfo.Name.Substring(0, sourceFileInfo.Name.Length - sourceFileInfo.Extension.Length);
+                            if (isJpg)
+                            {
+                                name += ".jpg";
+                            }
+                            else
+                            {
+                                name += sourceFileInfo.Extension;
+                            }
+                            string destFile = arg + "\\" + name;
+                            if (!MoveFolder(targetFile, destFile))
+                            {
+                                DisposeProgressClick(index, total, "源文件移动失败", "错误");
+                                continue;
+                            }
+                        }
+                        else
+                        {
+                            DisposeProgressClick(index, total, "目标文件不存在", "错误");
+                            continue;
+                        }
+                    }
+
+
+                    // 计算压缩率
+                    double cr = 100;
+                    if (sourceFileInfoSize != 0)
+                    {
+                        Tools.Log(targetFile + " 压缩前大小：" + sourceFileInfoSize + " 压缩后大小：" + targetFileInfoSize);
+                        cr = targetFileInfoSize * 100.0 / sourceFileInfoSize;
+                    }
+
+                    DisposeProgressClick(index, total, "压缩率：" + cr.ToString("0.00") + "%", "成功");
+
+                    success++;
+                }catch(Exception ex)
                 {
-                    // 重命名源文件
-
+                    DisposeProgressClick(index, total, "出错", ex.Message);
                 }
-                else if (way == 3)
+                finally
                 {
-                    // 重命名压缩后文件
-
+                    // 缓存文件
+                    if (File.Exists(targetFile))
+                    {
+                        File.Delete(targetFile);
+                    }
                 }
-                else if (way == 4)
-                {
-                    // 源文件转移到指定位置
-
-                }
-                else if (way == 5)
-                {
-                    // 压缩后的文件输出到指定位置
-
-                }
-
-                if (!File.Exists(sourceFile))
-                {
-                    DisposeProgressClick(index, total, "源文件不存在", "错误");
-                    continue;
-                }
-
-                // 获取源文件大小
-                FileInfo sourceFileInfo = new FileInfo(sourceFile);
-                long sourceFileInfoSize = sourceFileInfo.Length;
-
-                ImgCompress(sourceFile, targetFile, quality);
-
-                // 获取压缩后文件大小
-                FileInfo targetFileInfo = new FileInfo(targetFile);
-                long targetFileInfoSize = targetFileInfo.Length;
-
-                // 计算压缩率
-                int cr = 100;
-                if (sourceFileInfoSize != 0) 
-                {
-                    cr = (int)(targetFileInfoSize / sourceFileInfoSize * 100);
-                }
-
-                DisposeProgressClick(index, total, "压缩率：" + cr + "%", "成功");
-
-                success++;
             }
 
             isClose = true;
             DisposeProgressClick(-1, success, "完成", "");
         }
 
-        private void DisposeProgressClick(int current, int total, string fileName, string info)
+        public bool MoveFolder(string sourcePath, string destPath)
+        {
+            if (File.Exists(sourcePath))
+            {
+                if (!File.Exists(destPath))
+                {
+                    try
+                    {
+                        File.Move(sourcePath, destPath);
+                    }catch(Exception ex)
+                    {
+                        Tools.Log("移动文件失败：" + ex.Message);
+                        return false;
+                    }
+                }
+                else
+                {
+                    Tools.Log("移动文件失败：目标文件已存在");
+                    return false;
+                }
+            }
+            else
+            {
+                Tools.Log("移动文件失败：源文件不存在" );
+                return false;
+            }
+
+            return true;
+        }
+
+            private void DisposeProgressClick(int current, int total, string fileName, string info)
         {
             if (DisposeProgressEvent != null)
             {
@@ -208,8 +381,9 @@ namespace ImgZipBat
                 }
                 return true;
             }
-            catch
+            catch(Exception ex)
             {
+                Tools.Log("出错：", ex.Message);
                 return false;
             }
             finally
@@ -219,6 +393,63 @@ namespace ImgZipBat
                     iSource.Dispose();
                 }
             }
+        }
+
+        protected void CompressAndSave(System.Drawing.Image img, string path, string extension)
+        {
+            //try
+            //{
+            //    // If jpg is extension then remove png equivalent of it
+            //    // because if extension is same it'll be overridden
+            //    string delFilePath = path;
+            //    if (extension == ".png")
+            //    {
+            //        delFilePath = delFilePath.Substring(0, delFilePath.Length - 3) + "jpg";
+            //    }
+            //    else
+            //    {
+            //        delFilePath = delFilePath.Substring(0, delFilePath.Length - 3) + "png";
+            //    }
+            //    if (System.IO.File.Exists(delFilePath))
+            //    {
+            //        System.IO.File.Delete(delFilePath);
+            //    }
+            //}
+            //catch { }
+            if (extension == ".jpg" || extension == ".jpeg")
+            {
+                using (Bitmap bitmap = new Bitmap(img))
+                {
+                    ImageCodecInfo imageEncoder = null;
+                    imageEncoder = GetEncoder(ImageFormat.Jpeg);
+                    // Create an Encoder object based on the GUID  
+                    // for the Quality parameter category.  
+                    System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+
+                    // Create an EncoderParameters object.  
+                    // An EncoderParameters object has an array of EncoderParameter  
+                    // objects. In this case, there is only one  
+                    // EncoderParameter object in the array.  
+                    EncoderParameters encodingParams = new EncoderParameters(1);
+
+                    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, 50L);
+                    encodingParams.Param[0] = myEncoderParameter;
+                    bitmap.Save(path, imageEncoder, encodingParams);
+                }
+            }
+            else
+            {
+                // 包：ImageProcessor
+                //var quantizer = new WuQuantizer();
+                //using (var bitmap = new Bitmap(img))
+                //{
+                //    using (var quantized = quantizer.QuantizeImage(bitmap)) //, alphaTransparency, alphaFader))
+                //    {
+                //        quantized.Save(path, ImageFormat.Png);
+                //    }
+                //}
+            }
+
         }
 
         private ImageCodecInfo GetEncoder(ImageFormat format)

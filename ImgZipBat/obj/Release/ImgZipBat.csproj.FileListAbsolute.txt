@@ -1,0 +1,16 @@
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\bin\Release\ImgZipBat.exe.config
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\bin\Release\ImgZipBat.exe
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\bin\Release\ImgZipBat.pdb
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.csproj.AssemblyReference.cache
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\MainWindow.g.cs
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\App.g.cs
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat_MarkupCompile.cache
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat_MarkupCompile.lref
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\MainWindow.baml
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.g.resources
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.Properties.Resources.resources
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.csproj.GenerateResource.cache
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.csproj.CoreCompileInputs.cache
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.csproj.CopyComplete
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.exe
+E:\Project\ImgZipBat\ImgZipBat\ImgZipBat\obj\Release\ImgZipBat.pdb

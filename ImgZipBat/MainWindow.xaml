@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ImgZipBat"
         mc:Ignorable="d"
-        Title="图片批量压缩" Height="500" Width="800">
+        Title="图片批量压缩" Height="520" Width="400" Icon="icon.png">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
@@ -30,7 +29,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Text="D:\Minuy\Desktop\2" x:Name="tbFilesDir"  Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0"/>
+                <TextBox Text="" x:Name="tbFilesDir"  Grid.Column="0" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0"/>
                 <Button x:Name="btnChooseDir" Grid.Column="1"  Content="选择位置" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" HorizontalContentAlignment="Center" Margin="5,0" Click="BtnChooseDir_Click"/>
             </Grid>
             <!-- 选择压缩方式和覆盖方式 -->
@@ -116,14 +115,14 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <RadioButton x:Name="rbJpg" Grid.Column="0" Content="改为jpg" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
-                        <RadioButton x:Name="rbSource" Grid.Column="1" Content="保持后缀" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5,0,0,0"/>
+                        <RadioButton x:Name="rbSource" Grid.Column="0" Content="保持后缀" HorizontalAlignment="Left"  VerticalAlignment="Top" />
+                        <RadioButton IsEnabled="False" x:Name="rbJpg" Grid.Column="1" Content="改为jpg" HorizontalAlignment="Left"  VerticalAlignment="Top" Margin="5,0,0,0"/>
                     </Grid>
                 </GroupBox>
             </Grid>
             <!-- 日志输出 -->
             <Grid x:Name="gdLog" Grid.Row="2" Margin="10" >
-                <ListBox x:Name="lbLog" />
+                <ListBox x:Name="lbLog" Height="277" />
             </Grid>
 
             <Grid Grid.Row="3" Margin="5">

@@ -47,7 +47,7 @@ namespace ImgZipBat
             rbs[4] = rbReNameZip;
 
             rbOverWrite.IsChecked = true;
-            rbJpg.IsChecked = true;
+            rbSource.IsChecked = true;
             slZipLevel.Maximum = 100;
             slZipLevel.Value = 50;
 
@@ -220,18 +220,20 @@ namespace ImgZipBat
                 {
                     des = "完成：已成功处理" + total + "个文件";
                     _ = lbLog.Items.Add(des);
+
+                    _ = MessageBox.Show(des, "完成", MessageBoxButton.OK, MessageBoxImage.Information);
+
                     LockView(false);
                     isStart = false;
-
-                    MessageBox.Show(des, "完成", MessageBoxButton.OK, MessageBoxImage.Information);
-                }else if (current == -2) // 表示被中断停止了
+                }
+                else if (current == -2) // 表示被中断停止了
                 {
                     des = "停止：已成功处理" + total + "个文件";
                     _ = lbLog.Items.Add(des);
                     LockView(false);
                     isStart = false;
 
-                    MessageBox.Show(des, "停止", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    _ = MessageBox.Show(des, "停止", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
 
                 // 设置日志最大条目数
@@ -280,8 +282,8 @@ namespace ImgZipBat
                 btnChooseMoveDir.IsEnabled = !v;
             }
 
-            btnStart.Visibility = Visibility.Visible;
-            btnLog.Visibility = Visibility.Visible;
+            // btnStart.Visibility = Visibility.Visible;
+            // btnLog.Visibility = Visibility.Visible;
         }
 
         private bool CheckAndSetConfig()
